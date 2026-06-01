@@ -75,5 +75,35 @@ Automated data collection → cleaning → modelling → visualization.
   - Cutting ratio analysis (program efficiency)
 
 
+## Dashboard Screenshots
+
+### Setup Cost Analysis
+![Setup Cost](Bi_SETT_COST.png)
+
+### Annual Tool Cost - Top 25
+![Annual Cost](Bi_YEAR.png)
+
+### Monthly and YTD Trend
+![Monthly YTD](Monthly-and-ytd.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Project Status
 ✅ Active – running in production environment
