@@ -1,0 +1,59 @@
+Egy teljes adatfeldolgozó, költségszámoló és riportáló rendszer: CNC gépekből származó 
+log fájlok feldolgozására, elemzésére és szettköltség számításra.
+
+PowerShell script: automatikusan letölti, kicsomagolja és rendszerezi a CNC gépek log fájljait. 
+A fájlokat egységes mappastruktúrába rendezi, és előkészíti további feldolgozásra:
+
+
+Adatfeldolgozás (ETL): Excel Power Query-ben egyedi adatfeldolgozó pipeline:
+
+-szöveges log fájlok beolvasása
+-sorokra és oszlopokra bontás
+-adattípusok beállítása
+-hibás adatok szűrése
+-számított mezők létrehozása (pl. él arány, datetime)
+
+Adatmodell: Külön fact és aggregált táblák, így van:
+
+-operatív dataset -->  gyors lekérés, aktuális adatokkal(1 hónap)
+-éves dataset -->  teljes éves költségelemzés, lassabb frissítés
+
+
+<#
+
+Vizualizáció (Power BI): 
+
+KPI kártyák (szerszámköltség, szerszám darabszám, terheltség)
++
+Pareto / szerszámköltség bontás (donut, waterfall) / havi trend és kumulált (YTD) költség
++
+dinamikus szűrés (job, termék)
+
+#>
+
+
+Az egész rendszer automatikusan frissül: 
+Windows Task Scheduler + PowerShell segítségével automatizált adatletöltés, és excelek frissítése:
+
+-napi log letöltés (4:00)
+-adatfrissítés (4:30) + mentés => mindenkit friss adat vár ever
+
+-teljes pipeline manuális beavatkozás nélkül működik, 
+-hálózati mappából elérhető, 
+-mindenki számítógépéről frissíthető
+
+Eredmény: end-to-end adatpipeline: adatgyűjtés → tisztítás → modell → vizualizáció → automatizálás
+
+A rendszer alkalmas:
+szett szerszámköltségének elemzésére
+problémás szerszámok azonosítására
+operátori hibák kimutatására
+fejlődés kimutatására
+ciklusidő javulás kimutatására
+operátori kihasználtság kimutatására
+forgácsolási arány kimutatására
+
+Utólagos kérés alapjén ad-hoc python ETL scriptet készítettem (.bat, felugró ablak), 
+amivel le lehet kérni excelből egy konkrét szett költségét részletezve, másik excel fájlba táblázatba kimentve. 
+Egy másik scripttel az operációnkénti szerszámhasználatot lehet kimutatni.
+
