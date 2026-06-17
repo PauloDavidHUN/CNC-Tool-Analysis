@@ -63,7 +63,15 @@ Automated data collection → cleaning → modelling → visualization.
   - Morning data refresh + save
   - Zero manual intervention required
 
+## 6. Version Control
+  - Git – full history of pipeline development
 
+## 7. Python Automation
+  - `refresh_helper.py` – automated Excel refresh via win32com
+  - `koltseg_szamolo.py` – tool cost calculator per setup
+  - `config.py` – centralized path management, multi-machine compatible
+  - Box cloud sync detection before refresh
+  - Formatted Excel output with openpyxl
 
 ## Use Cases
   - Tool cost analysis per setup
@@ -73,6 +81,23 @@ Automated data collection → cleaning → modelling → visualization.
   - Cycle time improvement analysis
   - Operator utilization monitoring
   - Cutting ratio analysis (program efficiency)
+
+
+## Architecture
+CNC Machines → PowerShell (ZIP extract) → Folder structure
+                                                ↓
+                                    Power Query ETL (M language)
+                                                ↓
+                              ┌─────────────────────────────┐
+                              │         Data Model          │
+                              │  Fact tables + Aggregations │
+                              └─────────────────────────────┘
+                                                ↓
+                              ┌──────────────┬─────────────┬─────────────┐
+                              │   Power BI   │   Python    │  Python     |
+                              │  Dashboards  │  Cost calc  │ Muveletek   |
+                              └──────────────┴─────────────┴─────────────┘
+
 
 
 ## Dashboard Screenshots
