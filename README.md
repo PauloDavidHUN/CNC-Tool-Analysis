@@ -8,7 +8,7 @@ Automated data collection → cleaning → modelling → visualization.
 
  ## Key Achievements
  
-- **Excluded UI lag (~3s)** from cycle time measurements for accurate data
+- **Excluded UI lag (~3s->0.2s)** from cycle time measurements for accurate data
 - **Optimized logging logic** – tool registration happens after each tool call
   instead of start/end of main program only
   - Result: reduced operator data manipulation possibilities
