@@ -1,12 +1,10 @@
-# CNC-Tool-Analysis
+# Tool-Analysis, Logging-Update, UI lag minimizing, LocalAI
 CNC machine tool cost analysis pipeline
 
 # CNC Tool Cost Analysis Pipeline
 
 End-to-end data pipeline for CNC machine tool cost analysis.  
 Automated data collection → cleaning → modelling → visualization.
-
-
 
  ## Key Achievements
  
@@ -16,8 +14,6 @@ Automated data collection → cleaning → modelling → visualization.
   - Result: reduced operator data manipulation possibilities
 - **~1 hour saved every 2 days** through cycle time improvements
   identified by the system (based on high tool change frequency analysis)
-
-
 
 ## Technologies Used
 
@@ -73,6 +69,38 @@ Automated data collection → cleaning → modelling → visualization.
   - Box cloud sync detection before refresh
   - Formatted Excel output with openpyxl
 
+## 8. AI Integration (In Progress)
+
+### Local LLM Setup
+- **Ollama** – local LLM runtime, fully offline
+- **Llama 3.1 8B** – open source language model running on local hardware
+- Offline - Zero data privacy risk – no data leaves the machine
+- No API costs, no cloud dependency
+
+### Natural Language Query Interface
+- Conversational querying of CNC production data in Hungarian
+- Python + LlamaIndex framework for LLM orchestration
+- "Python calculates, AI interprets" architecture:
+  - Pandas handles all data aggregations
+  - LLM receives pre-computed summaries + business context
+  - Result: no hallucination on numeric data
+
+### Context Engineering
+- Custom business context layer describing:
+  - Data structure and column semantics
+  - Domain-specific rules (valid JOB numbers, known data quality issues)
+  - Expected output format and language
+- Prompt engineering for manufacturing domain
+
+### RAG Pipeline (In Progress)
+- **ChromaDB** – local vector database
+- **LlamaIndex** – RAG orchestration
+- **OllamaEmbedding** – local embedding model
+- Goal: semantic search over full production history
+- Enables: "Which tool caused the most downtime last quarter?"
+  without predefined queries
+
+
 ## Use Cases
   - Tool cost analysis per setup
   - Identifying problematic tools
@@ -93,11 +121,14 @@ CNC Machines → PowerShell (ZIP extract) → Folder structure
                               │  Fact tables + Aggregations │
                               └─────────────────────────────┘
                                                 ↓
-                              ┌──────────────┬─────────────┬─────────────┐
-                              │   Power BI   │   Python    │  Python     |
-                              │  Dashboards  │  Cost calc  │ Muveletek   |
-                              └──────────────┴─────────────┴─────────────┘
+                              ┌──────────────┬─────────────┬
+                              │   Power BI   │   Python    │ 
+                              │  Dashboards  │  Cost calc  │
+                              └──────────────┴─────────────┴
 
+
+## Project Status
+✅ Active – running in production environment
 
 
 ## Dashboard Screenshots
@@ -110,25 +141,3 @@ CNC Machines → PowerShell (ZIP extract) → Folder structure
 
 ### Monthly and YTD Trend
 ![Monthly YTD](Monthly-and-ytd.png)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Project Status
-✅ Active – running in production environment
