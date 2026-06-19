@@ -92,14 +92,21 @@ Automated data collection → cleaning → modelling → visualization.
   - Expected output format and language
 - Prompt engineering for manufacturing domain
 
-### RAG Pipeline (In Progress)
+### RAG Pipeline – Lessons Learned
 - **ChromaDB** – local vector database
 - **LlamaIndex** – RAG orchestration
 - **OllamaEmbedding** – local embedding model
 - Goal: semantic search over full production history
 - Enables: "Which tool caused the most downtime last quarter?"
   without predefined queries
-
+⟱
+- Tested on 78,449 rows → 900MB vector index
+- Finding: RAG excels at semantic/contextual queries,
+  not numerical aggregations
+- Decision: hybrid architecture chosen
+  → Python handles all aggregations (accurate, fast)
+  → LLM interprets pre-computed results (no hallucination)
+- Result: reliable answers without full dataset embedding
 
 ## Use Cases
   - Tool cost analysis per setup
