@@ -112,20 +112,7 @@ Automated data collection → cleaning → modelling → visualization.
 
 
 ## Architecture
-CNC Machines → PowerShell (ZIP extract) → Folder structure
-                                                ↓
-                                    Power Query ETL (M language)
-                                                ↓
-                              ┌─────────────────────────────┐
-                              │         Data Model          │
-                              │  Fact tables + Aggregations │
-                              └─────────────────────────────┘
-                                                ↓
-                              ┌──────────────┬─────────────┬
-                              │   Power BI   │   Python    │ 
-                              │  Dashboards  │  Cost calc  │
-                              └──────────────┴─────────────┴
-
+CNC Machines → PowerShell (ZIP extract) → Folder structure →  Power Query ETL (M language) → Data Model: Fact + Aggregations → PowerBi: Dashboards, Python: Cost calc 
 
 ## Project Status
 ✅ Active – running in production environment
