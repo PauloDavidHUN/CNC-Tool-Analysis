@@ -1,8 +1,7 @@
 $baseUser  = $env:USERPROFILE
 $basePath  = Join-Path $baseUser "eleres1\eleres2\LOGS"
 $logFile   = Join-Path $basePath "BACKUP_ERRORS.txt"
-
-# Külön base minden LL-nek -> IT
+#kulon base -> IT
 $baseNC5 = Join-Path $baseUser "Box\SORNEV5\NC\Backups"
 $baseNC6 = Join-Path $baseUser "Box\SORNEV6\NC\Backups"
 $baseNC7 = Join-Path $baseUser "Box\SORNEV7\NC\Backups"
@@ -91,7 +90,7 @@ foreach ($root in $machines) {
     catch {
         $hiba = "Mappa nem elheto el ($root): $_"
         Write-Log $hiba "ERROR"
-        continue  # következő gépre ugrik
+        continue 
     }
 
     if (-not $latestZip) {
@@ -117,7 +116,7 @@ foreach ($root in $machines) {
         $hiba = "ZIP kibontasi hiba ($machineName - $($latestZip.Name)): $_"
         Write-Log $hiba "ERROR"
         Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue
-        continue  # következő gépre ugrik
+        continue  #
     }
 
     $sourceFile = Get-ChildItem $tmp -Recurse -Filter CURTIME.txt -ErrorAction SilentlyContinue | Select-Object -First 1
