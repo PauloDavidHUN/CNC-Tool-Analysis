@@ -1,8 +1,5 @@
 import os
 
-#BASE_PATH = r"C:\Users\USER1\MES\LOC1\PROJEKT" #csak saját gépen fut
-#BASE_OUTPUT = r"C:\Users\USER1\Desktop" #csak saját gépen fut
-
 BASE_PATH = os.path.join(os.path.expanduser("~"), "MES", "LOC1", "PROJEKT")
 BASE_OUTPUT = os.path.join(os.path.expanduser("~"), "Desktop")
 
