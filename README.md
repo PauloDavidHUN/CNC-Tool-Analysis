@@ -1,3 +1,4 @@
+
 # Tool-Analysis, Logging-Update, UI lag minimizing, LocalAI
 CNC tool cost analysis pipeline
 
@@ -123,6 +124,8 @@ CNC Machines → PowerShell (ZIP extract) → Folder structure →  Power Query 
 ## Project Status
 ✅ Active – running in production environment
 
+*  This repository contains selected modules and automation logic from an end-to-end CNC data pipeline project.
+*  This project is a personal practice implementation. All data, structure, and identifiers are anonymized or mocked for demonstration purposes and do not represent any proprietary or sensitive information.
 
 ## Dashboard Screenshots
 
