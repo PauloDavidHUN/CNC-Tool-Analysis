@@ -129,6 +129,9 @@ CNC Machines → PowerShell (ZIP extract) → Folder structure →  Power Query 
 
 ## Dashboard Screenshots
 
+### User-facing folder structure design for non-technical stakeholders.
+![Folder stucture](GITHUB_front_structure.png)
+
 ### Setup Cost Analysis
 ![Setup Cost](Bi_SETT_COST.png)
 
