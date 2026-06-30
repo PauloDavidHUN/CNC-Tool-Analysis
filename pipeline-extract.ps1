@@ -1,13 +1,9 @@
 $baseUser  = $env:USERPROFILE
-$basePath  = Join-Path $baseUser "eleres1\eleres2\LOGS"
-$logFile   = Join-Path $basePath "BACKUP_ERRORS.txt"
-#kulon base -> IT
-$baseNC5 = Join-Path $baseUser "Box\SORNEV5\NC\Backups"
-$baseNC6 = Join-Path $baseUser "Box\SORNEV6\NC\Backups"
-$baseNC7 = Join-Path $baseUser "Box\SORNEV7\NC\Backups"
-$baseNC8 = Join-Path $baseUser "Box\SORNEV8\NC\Backups"
+$basePath  = Join-Path $baseUser "ut1\ut2"
+$baseNC    = Join-Path $baseUser "MES\ut1\ut2\Backups"
+$logFile   = Join-Path $basePath "EGYEB\BACKUP_ERRORS.txt"
 
-# Logging 
+# Logging
 function Write-Log {
     param(
         [string]$Uzenet,
@@ -22,51 +18,30 @@ function Write-Log {
 Write-Log "========================================" "INFO"
 Write-Log "Futas indul" "INFO"
 
-$lineMap = @{
-    $baseNC5 = "SORNEV5"
-    $baseNC6 = "SORNEV6"
-    $baseNC7 = "SORNEV7"
-    $baseNC8 = "SORNEV8"
+# Géplista beolvasása JSON-ból
+$configPath = Join-Path $PSScriptRoot "machines.json"
+try {
+    $config = Get-Content $configPath -Encoding UTF8 -ErrorAction Stop | ConvertFrom-Json
 }
-$machines = @(
+catch {
+    Write-Log "Konfig fajl nem olvasható: $configPath - $_" "ERROR"
+    exit
+}
 
+# Tömb összerakása - SH szekció
+$machines = @()
+foreach ($line in $config.SH.PSObject.Properties) {
+    foreach ($op in $line.Value) {
+        $machines += Join-Path $baseNC "$($line.Name)\$op"
+    }
+}
 
-#SORNEV5
-    "$baseNC5\op10_0146",
-    "$baseNC5\op20_0145", 
-    "$baseNC5\op30_0144", 
-    "$baseNC5\op40_0122", 
-    "$baseNC5\op50_0123" 
-
-#SORNEV6
-    "$baseNC6\op10_0134",
-    "$baseNC6\op20_0133", 
-    "$baseNC6\op30_0132", 
-    "$baseNC6\op40_0135", 
-    "$baseNC6\op50_0131", 
-    "$baseNC6\op60_0130"
-											
-#SORNEV7
-    "$baseNC7\op10_0124",
-    "$baseNC7\op20_0125", 
-    "$baseNC7\op30_0126", 
-    "$baseNC7\op40_0127", 
-    "$baseNC7\op50_0128", 
-    "$baseNC7\op60_0129",
-
-
-#SORNEV8
-    "$baseNC8\op10_0152",
-    "$baseNC8\op20_0151", 
-    "$baseNC8\op30_0150", 
-    "$baseNC8\op40_0149", 
-    "$baseNC8\op50_0148", 
-    "$baseNC8\op60_0147"
-
-
-)
 
 foreach ($root in $machines) {
+
+    # Gép és sor neve - előre, hogy a catch blokkokban is elérhető legyen
+    $machineName = Split-Path $root -Leaf
+    $lineName    = Split-Path (Split-Path $root -Parent) -Leaf
 
     # 1. Legfrissebb ZIP keresés
     try {
@@ -88,9 +63,8 @@ foreach ($root in $machines) {
             Select-Object -ExpandProperty File
     }
     catch {
-        $hiba = "Mappa nem elheto el ($root): $_"
-        Write-Log $hiba "ERROR"
-        continue 
+        Write-Log "Mappa nem elheto el ($root): $_" "ERROR"
+        continue
     }
 
     if (-not $latestZip) {
@@ -98,13 +72,7 @@ foreach ($root in $machines) {
         continue
     }
 
-    
-    $machineName = Split-Path $root -Leaf
-    $parentPath  = Split-Path $root -Parent
-    $lineName    = $lineMap[$parentPath]
-
-
-    $zipDate = [datetime]::ParseExact($latestZip.Name.Substring(0,8), 'yyyyMMdd', $null)
+    $zipDate   = [datetime]::ParseExact($latestZip.Name.Substring(0,8), 'yyyyMMdd', $null)
     $kulonbseg = (Get-Date) - $zipDate
 
     # 2. Kibontás
@@ -113,30 +81,59 @@ foreach ($root in $machines) {
         Expand-Archive $latestZip.FullName $tmp -Force -ErrorAction Stop
     }
     catch {
-        $hiba = "ZIP kibontasi hiba ($machineName - $($latestZip.Name)): $_"
-        Write-Log $hiba "ERROR"
+        Write-Log "ZIP kibontasi hiba ($machineName - $($latestZip.Name)): $_" "ERROR"
         Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue
-        continue  #
+        continue
     }
 
-    $sourceFile = Get-ChildItem $tmp -Recurse -Filter CURTIME.txt -ErrorAction SilentlyContinue | Select-Object -First 1
+    $sourceFile  = Get-ChildItem $tmp -Recurse -Filter DATA1.txt        -ErrorAction SilentlyContinue | Select-Object -First 1
+    $sourceFile2 = Get-ChildItem $tmp -Recurse -Filter DATA2DAT.txt         -ErrorAction SilentlyContinue | Select-Object -First 1
+    $sourceFile3 = Get-ChildItem $tmp -Recurse -Filter DATA1_SINGLE.txt -ErrorAction SilentlyContinue | Select-Object -First 1
 
-    $outDirCUR = Join-Path $basePath "terulet\$lineName"
+    # Kimeneti mappák
+    $outDirCUR = Join-Path $basePath "$lineName\MAIN"
+    $outDirCT  = Join-Path $basePath "$lineName\DATA2"
+    $outDirSIN = Join-Path $basePath "$lineName\DATA1"
+
     New-Item -ItemType Directory -Path $outDirCUR -Force | Out-Null
+    New-Item -ItemType Directory -Path $outDirCT  -Force | Out-Null
+    New-Item -ItemType Directory -Path $outDirSIN -Force | Out-Null
 
-    # 3. Másolás
+    # 3. Másolások
     if ($sourceFile) {
         try {
-            $fileName = "${machineName}_CURTIME.txt"
-            Copy-Item $sourceFile.FullName (Join-Path $outDirCUR $fileName) -Force -ErrorAction Stop
+            Copy-Item $sourceFile.FullName (Join-Path $outDirCUR "${machineName}_MAIN.txt") -Force -ErrorAction Stop
         }
         catch {
-            $hiba = "Masolasi hiba ($machineName): $_"
-            Write-Log $hiba "ERROR"
+            Write-Log "Masolasi hiba DATA1 ($machineName): $_" "ERROR"
         }
     }
     else {
-        Write-Log "Hianyzik CURTIME.txt: $($latestZip.Name)" "WARNING"
+        Write-Log "Hianyzik DATA1.txt: $($latestZip.Name)" "WARNING"
+    }
+
+    if ($sourceFile2) {
+        try {
+            Copy-Item $sourceFile2.FullName (Join-Path $outDirCT "${machineName}_DATA2.txt") -Force -ErrorAction Stop
+        }
+        catch {
+            Write-Log "Masolasi hiba DATA2DAT ($machineName): $_" "ERROR"
+        }
+    }
+    else {
+        Write-Log "Hianyzik DATA2DAT.txt: $($latestZip.Name)" "WARNING"
+    }
+
+    if ($sourceFile3) {
+        try {
+            Copy-Item $sourceFile3.FullName (Join-Path $outDirSIN "${machineName}_DATA1.txt") -Force -ErrorAction Stop
+        }
+        catch {
+            Write-Log "Masolasi hiba DATA1_SINGLE ($machineName): $_" "ERROR"
+        }
+    }
+    else {
+        Write-Log "Hianyzik DATA1_SINGLE.txt: $($latestZip.Name)" "WARNING"
     }
 
     # Frissesség ellenőrzés
@@ -148,19 +145,46 @@ foreach ($root in $machines) {
     Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue
 }
 
-
-# CURTIME-ok egy mappába másolása
+# DATA1 SINGLE-ok egy mappába másolása
 try {
-    Get-ChildItem -Path (Join-Path $basePath "terulet") -Recurse -Filter *.txt |
+    Get-ChildItem -Path $basePath -Recurse -Filter *.txt |
     Where-Object {
-        $_.DirectoryName -like "*\terulet*" -and
-        $_.DirectoryName -notlike "*\terulet_ALL*"
+        $_.DirectoryName -like "*\DATA1*" -and
+        $_.DirectoryName -notlike "*\DATA1_ALL*"
     } |
-    Copy-Item -Destination (Join-Path $basePath "terulet\terulet_ALL") -ErrorAction Stop
-    Write-Log "CURTIME masolás kesz" "INFO"
+    Copy-Item -Destination (Join-Path $basePath "DATA1_ALL") -ErrorAction Stop
+    Write-Log "DATA1_ALL masolás kesz" "INFO"
 }
 catch {
-    Write-Log "CURTIME masolasi hiba: $_" "ERROR"
+    Write-Log "DATA1_ALL masolasi hiba: $_" "ERROR"
+}
+
+# CT-k egy mappába másolása
+try {
+    Get-ChildItem -Path $basePath -Recurse -Filter *.txt |
+    Where-Object {
+        $_.DirectoryName -like "*\DATA2*" -and
+        $_.DirectoryName -notlike "*\DATA2ALL*"
+    } |
+    Copy-Item -Destination (Join-Path $basePath "DATA2ALL") -ErrorAction Stop
+    Write-Log "DATA2ALL masolás kesz" "INFO"
+}
+catch {
+    Write-Log "DATA2ALL masolasi hiba: $_" "ERROR"
+}
+
+# MAIN-ok egy mappába másolása
+try {
+    Get-ChildItem -Path $basePath -Recurse -Filter *.txt |
+    Where-Object {
+        $_.DirectoryName -like "*\DATA3*" -and
+        $_.DirectoryName -notlike "*\DATA3_ALL*"
+    } |
+    Copy-Item -Destination (Join-Path $basePath "DATA3_ALL") -ErrorAction Stop
+    Write-Log "DATA3_ALL masolás kesz" "INFO"
+}
+catch {
+    Write-Log "MAIN_ALL masolasi hiba: $_" "ERROR"
 }
 
 Write-Log "Script befejezve" "INFO"
