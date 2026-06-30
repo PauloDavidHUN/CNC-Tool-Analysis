@@ -1,29 +1,28 @@
 # Tool-Analysis, Logging-Update, UI lag minimizing, LocalAI
-CNC machine tool cost analysis pipeline
+CNC tool cost analysis pipeline
 
 # CNC Tool Cost Analysis Pipeline
 
-End-to-end data pipeline for CNC machine tool cost analysis.  
-Automated data collection → cleaning → modelling → visualization.
+End-to-end data pipeline for CNC tool cost analysis.  
+Automated data collection → cleaning → modelling → python cripts and visualization.
 
  ## Key Achievements
  
-- **Excluded UI lag (~3s->0.2s)** from cycle time measurements for accurate data
+- **Excluded UI lag (~3s->0.2s)** 
 - **Optimized logging logic** – tool registration happens after each tool call
   instead of start/end of main program only
   - Result: reduced operator data manipulation possibilities
-- **~1 hour saved every 2 days** through cycle time improvements
-  identified by the system (based on high tool change frequency analysis)
+- **~1 hour saved every 2 days** based on high tool change frequency
 
 ## Technologies Used
 
 - **PowerShell** – automated log collection and file management
 - **Excel Power Query (M)** – ETL pipeline
-- **Power BI** – visualization and dashboards
+- **Power BI** – measurements, visualization and dashboards
 - **Windows Task Scheduler** – full automation
 - **Heidenhain Klartext** – CNC program files (.H, .A, .TAB, .txt)
-  - Source data extraction from CNC machine logs
-
+- **GIT** – Version control 
+- **Virtual environments** – (venv) + requirements.txt
 
 
 ## Pipeline Overview
@@ -67,8 +66,8 @@ Automated data collection → cleaning → modelling → visualization.
   - `koltseg_szamolo.py` – tool cost calculator per setup
   - `config.py` – centralized path management, multi-machine compatible
   - Box cloud sync detection before refresh
-  - Formatted Excel output with openpyxl
-
+  - Formatted Excel output with **openpyxl**
+    
 ## 8. AI Integration (In Progress)
 
 ### Local LLM Setup
