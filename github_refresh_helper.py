@@ -20,21 +20,15 @@ logging.info("refresh_helper.py indul...")
 def wait_for_box_sync(file_path, timeout=120, check_interval=2, stable_checks=3):
     """
     Megvárja amíg a Box szinkronizáció befejeződik.
-    
-    Args:
-        file_path: A fájl elérési útja
-        timeout: Maximum várakozási idő másodpercben
-        check_interval: Ellenőrzések között ennyi másodpercet vár
-        stable_checks: Ennyiszer kell egyforma méretnek lennie = "kész"
     """
     logging.info(f"Box szinkron ellenorzese: {file_path}")
     
-    start_time = time.time()   # ← VALÓDI idő mérés, nem összeadogatás
+    start_time = time.time()  
     last_size = -1
-    stable_count = 0           # ← Hányszor volt már egyforma a méret
+    stable_count = 0       
     
     while True:
-        elapsed = time.time() - start_time  # ← Pontos eltelt idő
+        elapsed = time.time() - start_time 
         
         # Timeout ellenőrzés
         if elapsed >= timeout:
@@ -44,7 +38,7 @@ def wait_for_box_sync(file_path, timeout=120, check_interval=2, stable_checks=3)
         # Fájl létezik-e?
         if not os.path.exists(file_path):
             logging.debug(f"Fajl meg nem letezik... ({elapsed:.0f}s)")
-            stable_count = 0  # Reset - ha eltűnt, kezdjük elölről
+            stable_count = 0  
             time.sleep(check_interval)
             continue
         
@@ -54,7 +48,7 @@ def wait_for_box_sync(file_path, timeout=120, check_interval=2, stable_checks=3)
         if current_size != last_size:
             logging.info(f"Meg szinkronizal... ({elapsed:.0f}s) | Meret: {current_size/1024:.1f} KB")
             last_size = current_size
-            stable_count = 0  # Reset - változott, nem kész
+            stable_count = 0 
         else:
             # Méret ugyanaz mint előző körben
             if current_size > 0:
@@ -110,7 +104,7 @@ def refresh_excel(file_path):
     excel.Visible = True
     excel.DisplayAlerts = False
     excel.AskToUpdateLinks = False
-    wb = None  # ← fontos: hogy a finally tudja hogy megnyílt-e
+    wb = None 
 
     try:
         # Box szinkron ellenőrzés
@@ -155,7 +149,7 @@ def refresh_excel(file_path):
 
         wb.Save()
         wb.Close()
-        wb = None  # ← jelzi hogy már be van zárva
+        wb = None  
         logging.info("Kesz! Mentve es bezarva.")
 
     except Exception as e:
