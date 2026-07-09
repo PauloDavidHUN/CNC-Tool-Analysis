@@ -1,3 +1,10 @@
+Descripion:
+My goal was simply to avoid having to go down to the shop floor every day to manually check CNC log files. I started by automating the log download with PowerShell. Once I had the data on my laptop, I realized I could process it as well. I began working with Excel, and as new requirements came up, I introduced Power Query, Power BI, and Python. Along the way, I also discovered that the CNC logging itself wasn't working the way it should, so I redesigned that too. In the end, it evolved into a fully automated system.
+
+Bemutató: 
+N
+Csak annyit szerettem volna, hogy ne kelljen minden nap lemennem a gépekhez kézzel logokat nézni. Először csak automatizáltam a logok letöltését PowerShellben. Utána rájöttem, hogy ha már nálam vannak az adatok, akkor fel is lehet dolgozni őket. Elkezdtem Excellel dolgozni, amikor egyre több igény jött, Power Queryt, Power BI-t és Pythont is bevontam. Közben kiderült, hogy maga a CNC oldali logolás is fejleszthető, ezért azt is átírtam. Végül egy teljesen automatikus rendszer lett belőle.
+
 
 # Tool-Analysis, Logging-Update, UI lag minimizing, LocalAI
 CNC tool cost analysis pipeline
