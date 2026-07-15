@@ -147,6 +147,9 @@ foreach ($root in $machines) {
 
 # DATA1-ok egy mappába másolása
 try {
+    $destDir = Join-Path $basePath "DATA1_ALL"
+    New-Item -ItemType Directory -Path $destDir -Force | Out-Null
+
     Get-ChildItem -Path $basePath -Recurse -Filter *.txt |
     Where-Object {
         $_.DirectoryName -like "*\DATA1*" -and
@@ -161,10 +164,13 @@ catch {
 
 # DATA2-k egy mappába másolása
 try {
+    $destDir = Join-Path $basePath "DATA2_ALL"
+    New-Item -ItemType Directory -Path $destDir -Force | Out-Null
+
     Get-ChildItem -Path $basePath -Recurse -Filter *.txt |
     Where-Object {
         $_.DirectoryName -like "*\DATA2*" -and
-        $_.DirectoryName -notlike "*\DATA2ALL*"
+        $_.DirectoryName -notlike "*\DATA2_ALL*"
     } |
     Copy-Item -Destination (Join-Path $basePath "DATA2ALL") -ErrorAction Stop
     Write-Log "DATA2ALL masolás kesz" "INFO"
@@ -175,6 +181,9 @@ catch {
 
 # DATA3-k egy mappába másolása
 try {
+    $destDir = Join-Path $basePath "DATA3_ALL"
+    New-Item -ItemType Directory -Path $destDir -Force | Out-Null
+
     Get-ChildItem -Path $basePath -Recurse -Filter *.txt |
     Where-Object {
         $_.DirectoryName -like "*\DATA3*" -and
