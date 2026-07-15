@@ -145,7 +145,7 @@ foreach ($root in $machines) {
     Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue
 }
 
-# DATA1 SINGLE-ok egy mappába másolása
+# DATA1-ok egy mappába másolása
 try {
     Get-ChildItem -Path $basePath -Recurse -Filter *.txt |
     Where-Object {
@@ -159,7 +159,7 @@ catch {
     Write-Log "DATA1_ALL masolasi hiba: $_" "ERROR"
 }
 
-# CT-k egy mappába másolása
+# DATA2-k egy mappába másolása
 try {
     Get-ChildItem -Path $basePath -Recurse -Filter *.txt |
     Where-Object {
@@ -173,7 +173,7 @@ catch {
     Write-Log "DATA2ALL masolasi hiba: $_" "ERROR"
 }
 
-# MAIN-ok egy mappába másolása
+# DATA3-k egy mappába másolása
 try {
     Get-ChildItem -Path $basePath -Recurse -Filter *.txt |
     Where-Object {
