@@ -1,3 +1,12 @@
+## Data Privacy & Intellectual Property Protection
+
+To comply with non-disclosure agreements and protect proprietary corporate data:
+- **Anonymized Variables:** All variable names, machine identifiers, paths, and database schemas have been replaced with generic or mocked terms.
+- **Selective Codebase:** Only selected, independent automation modules and architectural concepts are uploaded here. Core business logic, actual production logs, and sensitive company databases are strictly excluded.
+- **Mock Data Only:** The sample configurations, dashboards, and code shown in this repository utilize simulated/mock data created solely for demonstration purposes.
+
+
+
 Descripion:
 My goal was simply to avoid having to go down to the shop floor every day to manually check CNC log files. I started by automating the log download with PowerShell. Once I had the data on my laptop, I realized I could process it as well. I began working with Excel, and as new requirements came up, I introduced Power Query, Power BI, and Python. Along the way, I also discovered that the CNC logging itself wasn't working the way it should, so I redesigned that too. In the end, it evolved into a fully automated system.
 
