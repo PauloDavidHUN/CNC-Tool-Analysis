@@ -193,7 +193,7 @@ try {
     Write-Log "DATA3_ALL masolás kesz" "INFO"
 }
 catch {
-    Write-Log "MAIN_ALL masolasi hiba: $_" "ERROR"
+    Write-Log "DATA3_ALL masolasi hiba: $_" "ERROR"
 }
 
 Write-Log "Script befejezve" "INFO"
